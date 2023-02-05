@@ -11,6 +11,10 @@ import {
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import {
+  TrackServiceException,
+  TrackServiceExceptionType,
+} from 'src/track/exceptions/track-service-exception';
+import {
   UserServiceException,
   UserServiceExceptionType,
 } from 'src/user/exceptions/user-service-exception';
@@ -28,6 +32,15 @@ export class ErrorsInterceptor implements NestInterceptor {
               break;
             case UserServiceExceptionType.CREDENTIALS_WRONG:
               finalException = new ForbiddenException(err.message);
+              break;
+            default:
+              finalException = new InternalServerErrorException();
+          }
+        }
+        if (err instanceof TrackServiceException) {
+          switch (err.message) {
+            case TrackServiceExceptionType.NOT_FOUND:
+              finalException = new NotFoundException(err.message);
               break;
             default:
               finalException = new InternalServerErrorException();
