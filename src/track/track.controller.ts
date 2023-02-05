@@ -36,7 +36,7 @@ export class TrackController {
   }
 
   @Put(':id')
-  async updatePasswordById(
+  async updateById(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: TrackDto,
   ) {
