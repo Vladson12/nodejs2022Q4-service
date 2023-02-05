@@ -7,6 +7,7 @@ import {
   NotFoundException,
   InternalServerErrorException,
   ForbiddenException,
+  UnprocessableEntityException,
 } from '@nestjs/common';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -18,6 +19,10 @@ import {
   ArtistServiceException,
   ArtistServiceExceptionType,
 } from 'src/artist/exceptions/artist-service-exception';
+import {
+  FavoritesServiceException,
+  FavoritesServiceExceptionType,
+} from 'src/favorites/exceptions/favorites-service-exception';
 import {
   TrackServiceException,
   TrackServiceExceptionType,
@@ -66,6 +71,32 @@ export class ErrorsInterceptor implements NestInterceptor {
         if (err instanceof AlbumServiceException) {
           switch (err.message) {
             case AlbumServiceExceptionType.NOT_FOUND:
+              finalException = new NotFoundException(err.message);
+              break;
+            default:
+              finalException = new InternalServerErrorException();
+          }
+        }
+        if (err instanceof FavoritesServiceException) {
+          switch (err.message) {
+            case (FavoritesServiceExceptionType.ALBUM_NOT_FOUND,
+            FavoritesServiceExceptionType.ARTIST_NOT_FOUND,
+            FavoritesServiceExceptionType.TRACK_NOT_FOUND):
+              finalException = new UnprocessableEntityException(err.message);
+              break;
+            case FavoritesServiceExceptionType.ALBUM_NOT_FOUND:
+              finalException = new UnprocessableEntityException(err.message);
+              break;
+            case FavoritesServiceExceptionType.ARTIST_NOT_FOUND:
+              finalException = new UnprocessableEntityException(err.message);
+              break;
+            case FavoritesServiceExceptionType.ALBUM_NOT_FAVORITE:
+              finalException = new NotFoundException(err.message);
+              break;
+            case FavoritesServiceExceptionType.ARTIST_NOT_FAVORITE:
+              finalException = new NotFoundException(err.message);
+              break;
+            case FavoritesServiceExceptionType.TRACK_NOT_FAVORITE:
               finalException = new NotFoundException(err.message);
               break;
             default:

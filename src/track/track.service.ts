@@ -5,6 +5,7 @@ import {
   TrackServiceException,
   TrackServiceExceptionType,
 } from './exceptions/track-service-exception';
+import { Track } from './track.model';
 
 @Injectable()
 export class TrackService {

@@ -1,4 +1,4 @@
-import { Injectable, Scope } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { User } from '../user/user.model';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { v4 as uuidv4 } from 'uuid';
@@ -7,6 +7,9 @@ import { Artist } from 'src/artist/artist.model';
 import { ArtistDto } from 'src/artist/dto/artist.dto';
 import { Album } from 'src/album/album.model';
 import { AlbumDto } from 'src/album/dto/album.dto';
+import { Track } from 'src/track/track.model';
+import { ResponseFavoritesDto } from 'src/favorites/dto/response-favorites.dto';
+import { Favorites } from 'src/favorites/favorites.model';
 
 @Injectable()
 export class InMemoryDbService {
@@ -14,6 +17,11 @@ export class InMemoryDbService {
   readonly tracks: Track[] = [];
   readonly artists: Artist[] = [];
   readonly albums: Album[] = [];
+  readonly favorites: Favorites = {
+    artists: [], // favorite artists ids
+    albums: [], // favorite albums ids
+    tracks: [],
+  };
 
   async findAllUsers(): Promise<User[]> {
     return this.users;
@@ -182,6 +190,122 @@ export class InMemoryDbService {
     });
 
     this.albums.splice(albumIndex, 1);
+    return true;
+  }
+
+  async findAllFavorites(): Promise<ResponseFavoritesDto> {
+    const favAlbums: Album[] = [];
+    const favArtists: Artist[] = [];
+    const favTracks: Track[] = [];
+
+    this.favorites.albums.forEach((albumId) => {
+      const album = this.albums.find((album) => album.id === albumId);
+      if (album) {
+        favAlbums.push(album);
+      }
+    });
+
+    this.favorites.artists.forEach((artistId) => {
+      const artist = this.artists.find((artist) => artist.id === artistId);
+      if (artist) {
+        favArtists.push(artist);
+      }
+    });
+
+    this.favorites.tracks.forEach((trackId) => {
+      const track = this.tracks.find((track) => track.id === trackId);
+      if (track) {
+        favTracks.push(track);
+      }
+    });
+
+    return {
+      artists: favArtists,
+      albums: favAlbums,
+      tracks: favTracks,
+    };
+  }
+
+  async addTrackToFavorites(id: string): Promise<boolean> {
+    const trackToAddToFavs = this.tracks.find((track) => track.id === id);
+    if (!trackToAddToFavs) return false;
+
+    if (this.favorites.tracks.find((trackId) => trackId === id)) {
+      return;
+    }
+    this.favorites.tracks.push(id);
+    return true;
+  }
+
+  async addArtistToFavorites(id: string): Promise<boolean> {
+    const artistToAddToFavs = this.artists.find((artist) => artist.id === id);
+    if (!artistToAddToFavs) return false;
+
+    if (this.favorites.artists.find((artistId) => artistId === id)) {
+      return;
+    }
+    this.favorites.artists.push(id);
+    return true;
+  }
+
+  async addAlbumToFavorites(id: string): Promise<boolean> {
+    const albumToAddToFavs = this.albums.find((album) => album.id === id);
+    if (!albumToAddToFavs) return false;
+
+    if (this.favorites.albums.find((albumId) => albumId === id)) {
+      return;
+    }
+    this.favorites.albums.push(id);
+    return true;
+  }
+
+  async deleteTrackFromFavorites(id: string): Promise<boolean> {
+    // const trackToDeleteFromFavs = this.tracks.find((track) => track.id === id);
+    // if (!trackToDeleteFromFavs) return false;
+
+    const trackIndex = this.favorites.tracks.findIndex(
+      (trackId) => trackId === id,
+    );
+
+    if (trackIndex === -1) {
+      return false;
+    }
+
+    this.favorites.tracks.splice(trackIndex, 1);
+    return true;
+  }
+
+  async deleteArtistFromFavorites(id: string): Promise<boolean> {
+    // const artistToDeleteFromFavs = this.artists.find(
+    //   (artist) => artist.id === id,
+    // );
+    // if (!artistToDeleteFromFavs) return false;
+
+    const artistIndex = this.favorites.artists.findIndex(
+      (artistId) => artistId === id,
+    );
+
+    if (artistIndex === -1) {
+      return false;
+    }
+
+    this.favorites.artists.splice(artistIndex, 1);
+    return true;
+  }
+
+  async deleteAlbumFromFavorites(id: string): Promise<boolean> {
+    // const albumToDeleteFromFavs = this.albums.find((album) => album.id === id);
+    // if (!albumToDeleteFromFavs) return false;
+
+    const albumIndex = this.favorites.albums.findIndex(
+      (albumIndex) => albumIndex === id,
+    );
+
+    if (albumIndex === -1) {
+      return false;
+    }
+
+    this.favorites.albums.splice(albumIndex, 1);
     return true;
   }
 }
