@@ -5,12 +5,15 @@ import { v4 as uuidv4 } from 'uuid';
 import { TrackDto } from 'src/track/dto/track.dto';
 import { Artist } from 'src/artist/artist.model';
 import { ArtistDto } from 'src/artist/dto/artist.dto';
+import { Album } from 'src/album/album.model';
+import { AlbumDto } from 'src/album/dto/album.dto';
 
 @Injectable()
 export class InMemoryDbService {
   readonly users: User[] = [];
   readonly tracks: Track[] = [];
   readonly artists: Artist[] = [];
+  readonly albums: Album[] = [];
 
   async findAllUsers(): Promise<User[]> {
     return this.users;
@@ -72,7 +75,7 @@ export class InMemoryDbService {
     return this.tracks.find((track) => track.id === id);
   }
 
-  async updateTrackById(id: string, dto: Omit<Track, 'id'>): Promise<boolean> {
+  async updateTrackById(id: string, dto: TrackDto): Promise<boolean> {
     const trackToUpdate = this.tracks.find((track) => track.id === id);
     if (!trackToUpdate) return false;
     Object.assign(trackToUpdate, dto);
@@ -89,8 +92,6 @@ export class InMemoryDbService {
   }
 
   async findAllArtists(): Promise<Artist[]> {
-    console.log(this.tracks);
-
     return this.artists;
   }
 
@@ -109,11 +110,8 @@ export class InMemoryDbService {
     return this.artists.find((artist) => artist.id === id);
   }
 
-  async updateArtistById(
-    id: string,
-    dto: Omit<Artist, 'id'>,
-  ): Promise<boolean> {
-    const artistToUpdate = this.artists.find((track) => track.id === id);
+  async updateArtistById(id: string, dto: ArtistDto): Promise<boolean> {
+    const artistToUpdate = this.artists.find((artist) => artist.id === id);
     if (!artistToUpdate) return false;
     Object.assign(artistToUpdate, dto);
     return true;
@@ -134,6 +132,50 @@ export class InMemoryDbService {
     });
 
     this.artists.splice(artistIndex, 1);
+    return true;
+  }
+
+  async findAllAlbums(): Promise<Album[]> {
+    return this.albums;
+  }
+
+  async createAlbum(dto: AlbumDto): Promise<Album> {
+    const newAlbumUUID = uuidv4();
+
+    const newAlbum: Album = {
+      id: newAlbumUUID,
+      ...dto,
+    };
+    this.albums.push(newAlbum);
+    return this.findAlbumById(newAlbum.id);
+  }
+
+  async findAlbumById(id: string): Promise<Album> {
+    return this.albums.find((album) => album.id === id);
+  }
+
+  async updateAlbumById(id: string, dto: AlbumDto): Promise<boolean> {
+    const albumToUpdate = this.albums.find((album) => album.id === id);
+    if (!albumToUpdate) return false;
+    Object.assign(albumToUpdate, dto);
+    return true;
+  }
+
+  async deleteAlbumById(id: string): Promise<boolean> {
+    const albumIndex = this.albums.findIndex((album) => album.id === id);
+    if (albumIndex === -1) {
+      return false;
+    }
+
+    const albumToDelete = this.albums[albumIndex];
+
+    this.tracks.forEach((track) => {
+      if (track.albumId && track.albumId === albumToDelete.id) {
+        track.albumId = null;
+      }
+    });
+
+    this.albums.splice(albumIndex, 1);
     return true;
   }
 }

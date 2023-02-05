@@ -11,6 +11,10 @@ import {
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import {
+  AlbumServiceException,
+  AlbumServiceExceptionType,
+} from 'src/album/exceptions/album-service-exception';
+import {
   ArtistServiceException,
   ArtistServiceExceptionType,
 } from 'src/artist/exceptions/artist-service-exception';
@@ -53,6 +57,15 @@ export class ErrorsInterceptor implements NestInterceptor {
         if (err instanceof ArtistServiceException) {
           switch (err.message) {
             case ArtistServiceExceptionType.NOT_FOUND:
+              finalException = new NotFoundException(err.message);
+              break;
+            default:
+              finalException = new InternalServerErrorException();
+          }
+        }
+        if (err instanceof AlbumServiceException) {
+          switch (err.message) {
+            case AlbumServiceExceptionType.NOT_FOUND:
               finalException = new NotFoundException(err.message);
               break;
             default:
