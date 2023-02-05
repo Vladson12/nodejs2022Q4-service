@@ -15,6 +15,7 @@ export class UserService {
 
   async create(dto: CreateUserDto): Promise<ResponseUserDto> {
     const createdUser = await this.dbService.createUser(dto);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...rest } = createdUser;
     return rest;
   }
