@@ -26,7 +26,7 @@ export class UserController {
     return this.userService.create(dto);
   }
 
-  @Get('')
+  @Get()
   async getAll() {
     return this.userService.findAll();
   }

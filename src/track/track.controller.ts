@@ -25,7 +25,7 @@ export class TrackController {
     return this.trackService.create(dto);
   }
 
-  @Get('')
+  @Get()
   async getAll() {
     return this.trackService.findAll();
   }
