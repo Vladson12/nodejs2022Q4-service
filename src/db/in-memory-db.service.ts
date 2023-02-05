@@ -96,6 +96,7 @@ export class InMemoryDbService {
       return false;
     }
     this.tracks.splice(trackIndex, 1);
+    this.deleteTrackFromFavorites(id);
     return true;
   }
 
@@ -146,6 +147,7 @@ export class InMemoryDbService {
     });
 
     this.artists.splice(artistIndex, 1);
+    this.deleteArtistById(id);
     return true;
   }
 
@@ -190,6 +192,7 @@ export class InMemoryDbService {
     });
 
     this.albums.splice(albumIndex, 1);
+    this.deleteAlbumById(id);
     return true;
   }
 
