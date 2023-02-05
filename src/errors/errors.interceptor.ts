@@ -11,6 +11,10 @@ import {
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import {
+  ArtistServiceException,
+  ArtistServiceExceptionType,
+} from 'src/artist/exceptions/artist-service-exception';
+import {
   TrackServiceException,
   TrackServiceExceptionType,
 } from 'src/track/exceptions/track-service-exception';
@@ -46,6 +50,16 @@ export class ErrorsInterceptor implements NestInterceptor {
               finalException = new InternalServerErrorException();
           }
         }
+        if (err instanceof ArtistServiceException) {
+          switch (err.message) {
+            case ArtistServiceExceptionType.NOT_FOUND:
+              finalException = new NotFoundException(err.message);
+              break;
+            default:
+              finalException = new InternalServerErrorException();
+          }
+        }
+
         if (!finalException) {
           return throwError(() => err);
         }
