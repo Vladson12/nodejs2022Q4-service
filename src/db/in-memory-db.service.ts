@@ -131,6 +131,12 @@ export class InMemoryDbService {
       }
     });
 
+    this.albums.forEach((album) => {
+      if (album.artistId && album.artistId === artistToDelete.id) {
+        album.artistId = null;
+      }
+    });
+
     this.artists.splice(artistIndex, 1);
     return true;
   }
