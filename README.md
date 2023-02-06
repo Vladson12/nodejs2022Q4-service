@@ -30,13 +30,13 @@ To run this project please make sure to have `Git` and `Node.js 18 LTS` installe
 
 To setup the project, please follow these steps:
 
-1. clone this repo to your machine using 'git clone'
+1. clone this repo to your machine using `git clone`
 
 2. open project folder
 
-3. go to develop branch using 'git checkout dev'
+3. go to develop branch using `git checkout dev`
 
-4. install packages using 'npm install'
+4. install packages using `npm install`
 
 5. copy `.env.example` file in root of the project and name new file `.env`
 
