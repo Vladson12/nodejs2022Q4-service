@@ -1,16 +1,24 @@
-import { IsDefined, IsNotEmpty, IsNumber, IsString } from 'class-validator';
-import { IsUuidOrNull } from '../validators/track-validators';
+import {
+  IsDefined,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsUUID,
+} from 'class-validator';
 
 export class TrackDto {
   @IsString()
   @IsNotEmpty()
   name: string;
 
-  @IsUuidOrNull()
-  artistId: string | null; // refers to Artist
+  @IsOptional()
+  @IsUUID()
+  artistId: string; // refers to Artist
 
-  @IsUuidOrNull()
-  albumId: string | null; // refers to Album
+  @IsOptional()
+  @IsUUID()
+  albumId: string; // refers to Album
 
   @IsDefined()
   @IsNumber()
