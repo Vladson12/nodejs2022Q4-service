@@ -14,34 +14,34 @@ export class FavoritesService {
     return this.dbService.findAllFavorites();
   }
 
-  async addArtist(id: string): Promise<boolean> {
+  async addArtist(id: string) {
     const isAdded = await this.dbService.addArtistToFavorites(id);
     if (!isAdded) {
       throw new FavoritesServiceException(
         FavoritesServiceExceptionType.ARTIST_NOT_FOUND,
       );
     }
-    return isAdded;
+    return;
   }
 
-  async addAlbum(id: string): Promise<boolean> {
+  async addAlbum(id: string) {
     const isAdded = await this.dbService.addAlbumToFavorites(id);
     if (!isAdded) {
       throw new FavoritesServiceException(
         FavoritesServiceExceptionType.ALBUM_NOT_FOUND,
       );
     }
-    return isAdded;
+    return;
   }
 
-  async addTrack(id: string): Promise<boolean> {
+  async addTrack(id: string) {
     const isAdded = await this.dbService.addTrackToFavorites(id);
     if (!isAdded) {
       throw new FavoritesServiceException(
         FavoritesServiceExceptionType.TRACK_NOT_FOUND,
       );
     }
-    return isAdded;
+    return;
   }
 
   async deleteArtist(id: string): Promise<boolean> {

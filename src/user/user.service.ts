@@ -7,41 +7,20 @@ import {
   UserServiceExceptionType,
 } from './exceptions/user-service-exception';
 import { User } from './user.model';
-import { ResponseUserDto } from './dto/response-user.dto';
 
 @Injectable()
 export class UserService {
   constructor(private readonly dbService: InMemoryDbService) {}
 
-  async create(dto: CreateUserDto): Promise<ResponseUserDto> {
-    const createdUser = await this.dbService.createUser(dto);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password, ...rest } = createdUser;
-    return rest;
+  async create(dto: CreateUserDto): Promise<User> {
+    return await this.dbService.createUser(dto);
   }
 
-  async findAll(): Promise<ResponseUserDto[]> {
-    const usersWithoutPasswords = (await this.dbService.findAllUsers()).map(
-      (user) => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { password, ...rest } = user;
-        return rest;
-      },
-    );
-    return usersWithoutPasswords;
+  async findAll(): Promise<User[]> {
+    return await this.dbService.findAllUsers();
   }
 
-  async findById(id: string): Promise<ResponseUserDto> {
-    const foundUser = await this.dbService.findUserById(id);
-    if (!foundUser) {
-      throw new UserServiceException(UserServiceExceptionType.NOT_FOUND);
-    }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password, ...rest } = foundUser;
-    return rest;
-  }
-
-  private async findByIdWithPassword(id: string): Promise<User> {
+  async findById(id: string): Promise<User> {
     const foundUser = await this.dbService.findUserById(id);
     if (!foundUser) {
       throw new UserServiceException(UserServiceExceptionType.NOT_FOUND);
@@ -49,11 +28,12 @@ export class UserService {
     return foundUser;
   }
 
-  async updatePasswordById(
-    id: string,
-    dto: UpdatePasswordDto,
-  ): Promise<ResponseUserDto> {
-    const userToUpdate = await this.findByIdWithPassword(id);
+  async updatePasswordById(id: string, dto: UpdatePasswordDto): Promise<User> {
+    const userToUpdate = await this.dbService.findUserById(id);
+
+    if (!userToUpdate) {
+      throw new UserServiceException(UserServiceExceptionType.NOT_FOUND);
+    }
 
     if (!(userToUpdate.password === dto.oldPassword)) {
       throw new UserServiceException(

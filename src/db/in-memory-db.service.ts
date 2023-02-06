@@ -31,15 +31,15 @@ export class InMemoryDbService {
     const newUserUUID = uuidv4();
     const timestamp = Date.now();
 
-    const newUser: User = {
+    const newUser: User = new User({
       id: newUserUUID,
       createdAt: timestamp,
       updatedAt: timestamp,
       version: 1,
       ...dto,
-    };
+    });
     this.users.push(newUser);
-    return this.findUserById(newUserUUID);
+    return newUser;
   }
 
   async findUserById(id: string): Promise<User> {
@@ -47,9 +47,11 @@ export class InMemoryDbService {
   }
 
   async updateUserById(id: string, dto: Omit<User, 'id'>): Promise<boolean> {
+    console.log(dto);
+
     const userToUpdate = this.users.find((user) => user.id === id);
     if (!userToUpdate) return false;
-    Object.assign(userToUpdate, dto);
+    Object.assign(userToUpdate, { ...dto, id: userToUpdate.id });
     userToUpdate.version++;
     userToUpdate.updatedAt = Date.now();
     return true;
@@ -71,10 +73,8 @@ export class InMemoryDbService {
   async createTrack(dto: TrackDto): Promise<Track> {
     const newTrackUUID = uuidv4();
 
-    const newTrack: Track = {
-      id: newTrackUUID,
-      ...dto,
-    };
+    const newTrack: Track = new Track({ id: newTrackUUID, ...dto });
+
     this.tracks.push(newTrack);
     return this.findTrackById(newTrack.id);
   }
@@ -107,10 +107,11 @@ export class InMemoryDbService {
   async createArtist(dto: ArtistDto): Promise<Artist> {
     const newArtistUUID = uuidv4();
 
-    const newArtist: Artist = {
+    const newArtist: Artist = new Artist({
       id: newArtistUUID,
       ...dto,
-    };
+    });
+
     this.artists.push(newArtist);
     return this.findArtistById(newArtist.id);
   }
@@ -158,10 +159,11 @@ export class InMemoryDbService {
   async createAlbum(dto: AlbumDto): Promise<Album> {
     const newAlbumUUID = uuidv4();
 
-    const newAlbum: Album = {
+    const newAlbum: Album = new Album({
       id: newAlbumUUID,
       ...dto,
-    };
+    });
+
     this.albums.push(newAlbum);
     return this.findAlbumById(newAlbum.id);
   }
