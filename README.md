@@ -38,7 +38,7 @@ To setup the project, please follow these steps:
 
 4. install packages using 'npm install'
 
-5. copy `.env.example` file in root of the folder and name new file `.env`
+5. copy `.env.example` file in root of the project and name new file `.env`
 
 ## Running
 
