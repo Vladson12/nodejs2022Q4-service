@@ -36,7 +36,7 @@ To setup the project, please follow these steps:
 
 3. go to develop branch using `git checkout dev`
 
-4. install packages using `npm install`
+4. install packages using `npm install --force` (force is needed for now, because there is some dependency conflict with @nestjs/swagger)
 
 5. copy `.env.example` file in root of the project and name new file `.env`
 
