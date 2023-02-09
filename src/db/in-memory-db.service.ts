@@ -47,8 +47,6 @@ export class InMemoryDbService {
   }
 
   async updateUserById(id: string, dto: Omit<User, 'id'>): Promise<boolean> {
-    console.log(dto);
-
     const userToUpdate = this.users.find((user) => user.id === id);
     if (!userToUpdate) return false;
     Object.assign(userToUpdate, { ...dto, id: userToUpdate.id });
