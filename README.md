@@ -34,49 +34,17 @@ To setup the project, please follow these steps:
 
 2. open project folder
 
-3. go to develop branch using `git checkout dev`
+3. go to develop branch using `git checkout feature-2`
 
-4. install packages using `npm install`
-
-5. copy `.env.example` file in root of the project and name new file `.env`
+4. copy `.env.example` file in root of the project and name new file `.env`
 
 ## Running
 
-1. In development mode:
+Use docker:
 
 ```
-npm run start:dev
+docker-compose up
 ```
-
-2. In production mode:
-
-```
-npm run start
-```
-
-## Testing
-
-After application running open new terminal and enter:
-
-```
-npm run test
-```
-
-### Auto-fix and format
-
-```
-npm run lint
-```
-
-```
-npm run format
-```
-
-### Debugging in VSCode
-
-Press <kbd>F5</kbd> to debug.
-
-For more information, visit: https://code.visualstudio.com/docs/editor/debugging
 
 ## API
 
