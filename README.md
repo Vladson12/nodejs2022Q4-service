@@ -24,7 +24,7 @@ Project is created with:
 
 ## Prerequisites
 
-To run this project please make sure to have `Git` and `Node.js 18 LTS` installed.
+To run this project please make sure to have `Git` and `Docker` installed.
 
 ## Setup
 
@@ -44,6 +44,12 @@ Use docker:
 
 ```
 docker-compose up
+```
+
+## Scanning
+
+```
+npm run docker:scan
 ```
 
 ## API
