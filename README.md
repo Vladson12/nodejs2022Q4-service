@@ -34,7 +34,7 @@ To setup the project, please follow these steps:
 
 2. open project folder
 
-3. go to develop branch using `git checkout dev`
+3. go to develop branch using `git checkout feature-1`
 
 4. install packages using `npm install`
 
