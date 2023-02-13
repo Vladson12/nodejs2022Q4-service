@@ -22,17 +22,17 @@ export class TrackController {
 
   @Post()
   async create(@Body() dto: TrackDto) {
-    return this.trackService.create(dto);
+    // return this.trackService.create(dto);
   }
 
   @Get()
   async getAll() {
-    return this.trackService.findAll();
+    // return this.trackService.findAll();
   }
 
   @Get(':id')
   async getById(@Param('id', ParseUUIDPipe) id: string) {
-    return this.trackService.findById(id);
+    // return this.trackService.findById(id);
   }
 
   @Put(':id')
@@ -40,12 +40,12 @@ export class TrackController {
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: TrackDto,
   ) {
-    return this.trackService.updateById(id, dto);
+    // return this.trackService.updateById(id, dto);
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
   async deleteById(@Param('id', ParseUUIDPipe) id: string) {
-    return this.trackService.deleteById(id);
+    // return this.trackService.deleteById(id);
   }
 }

@@ -1,27 +1,39 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { InMemoryDbService } from '../db/in-memory-db.service';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import {
   UserServiceException,
   UserServiceExceptionType,
 } from './exceptions/user-service-exception';
 import { User } from './user.model';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly dbService: InMemoryDbService) {}
+  constructor(
+    @InjectRepository(User)
+    private usersRepository: Repository<User>,
+  ) {}
 
   async create(dto: CreateUserDto): Promise<User> {
-    return await this.dbService.createUser(dto);
+    const userToCreate = new User({
+      ...dto,
+      version: 1,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+    });
+
+    const createdUser = this.usersRepository.create(userToCreate);
+    return this.usersRepository.save(createdUser);
   }
 
   async findAll(): Promise<User[]> {
-    return await this.dbService.findAllUsers();
+    return await this.usersRepository.find();
   }
 
   async findById(id: string): Promise<User> {
-    const foundUser = await this.dbService.findUserById(id);
+    const foundUser = await this.usersRepository.findOneBy({ id });
     if (!foundUser) {
       throw new UserServiceException(UserServiceExceptionType.NOT_FOUND);
     }
@@ -29,7 +41,7 @@ export class UserService {
   }
 
   async updatePasswordById(id: string, dto: UpdatePasswordDto): Promise<User> {
-    const userToUpdate = await this.dbService.findUserById(id);
+    const userToUpdate = await this.usersRepository.findOneBy({ id });
 
     if (!userToUpdate) {
       throw new UserServiceException(UserServiceExceptionType.NOT_FOUND);
@@ -43,7 +55,7 @@ export class UserService {
 
     userToUpdate.password = dto.newPassword;
 
-    const isUpdated = await this.dbService.updateUserById(
+    const isUpdated = await this.usersRepository.update(
       userToUpdate.id,
       userToUpdate,
     );
@@ -61,7 +73,7 @@ export class UserService {
       throw new UserServiceException(UserServiceExceptionType.NOT_FOUND);
     }
 
-    const isDeleted = await this.dbService.deleteUserById(id);
+    const isDeleted = await this.usersRepository.delete(userToDelete.id);
     if (!isDeleted) {
       throw new UserServiceException(UserServiceExceptionType.INTERNAL_ERROR);
     }

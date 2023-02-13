@@ -23,46 +23,46 @@ export class InMemoryDbService {
     tracks: [],
   };
 
-  async findAllUsers(): Promise<User[]> {
-    return this.users;
-  }
+  // async findAllUsers(): Promise<User[]> {
+  //   return this.users;
+  // }
 
-  async createUser(dto: CreateUserDto): Promise<User> {
-    const newUserUUID = uuidv4();
-    const timestamp = Date.now();
+  // async createUser(dto: CreateUserDto): Promise<User> {
+  //   const newUserUUID = uuidv4();
+  //   const timestamp = Date.now();
 
-    const newUser: User = new User({
-      id: newUserUUID,
-      createdAt: timestamp,
-      updatedAt: timestamp,
-      version: 1,
-      ...dto,
-    });
-    this.users.push(newUser);
-    return newUser;
-  }
+  //   const newUser: User = new User({
+  //     id: newUserUUID,
+  //     createdAt: timestamp,
+  //     updatedAt: timestamp,
+  //     version: 1,
+  //     ...dto,
+  //   });
+  //   this.users.push(newUser);
+  //   return newUser;
+  // }
 
-  async findUserById(id: string): Promise<User> {
-    return this.users.find((user) => user.id === id);
-  }
+  // async findUserById(id: string): Promise<User> {
+  //   return this.users.find((user) => user.id === id);
+  // }
 
-  async updateUserById(id: string, dto: Omit<User, 'id'>): Promise<boolean> {
-    const userToUpdate = this.users.find((user) => user.id === id);
-    if (!userToUpdate) return false;
-    Object.assign(userToUpdate, { ...dto, id: userToUpdate.id });
-    userToUpdate.version++;
-    userToUpdate.updatedAt = Date.now();
-    return true;
-  }
+  // async updateUserById(id: string, dto: Omit<User, 'id'>): Promise<boolean> {
+  //   const userToUpdate = this.users.find((user) => user.id === id);
+  //   if (!userToUpdate) return false;
+  //   Object.assign(userToUpdate, { ...dto, id: userToUpdate.id });
+  //   userToUpdate.version++;
+  //   userToUpdate.updatedAt = Date.now();
+  //   return true;
+  // }
 
-  async deleteUserById(id: string): Promise<boolean> {
-    const userIndex = this.users.findIndex((user) => user.id === id);
-    if (userIndex === -1) {
-      return false;
-    }
-    this.users.splice(userIndex, 1);
-    return true;
-  }
+  // async deleteUserById(id: string): Promise<boolean> {
+  //   const userIndex = this.users.findIndex((user) => user.id === id);
+  //   if (userIndex === -1) {
+  //     return false;
+  //   }
+  //   this.users.splice(userIndex, 1);
+  //   return true;
+  // }
 
   async findAllTracks(): Promise<Track[]> {
     return this.tracks;

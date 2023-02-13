@@ -7,6 +7,7 @@ import { OpenAPIObject } from '@nestjs/swagger/dist';
 import { resolve } from 'path';
 import { load } from 'js-yaml';
 import { readFileSync } from 'fs';
+import 'reflect-metadata';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -20,6 +21,6 @@ async function bootstrap() {
   const objDoc = load(readFileSync(inputFilePath, { encoding: 'utf-8' }));
   SwaggerModule.setup('api', app, objDoc as OpenAPIObject);
 
-  await app.listen(configService.get('PORT') || 4000);
+  await app.listen(+configService.get('PORT') || 4000);
 }
 bootstrap();
