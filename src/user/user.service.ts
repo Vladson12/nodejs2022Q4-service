@@ -29,7 +29,7 @@ export class UserService {
   }
 
   async findAll(): Promise<User[]> {
-    return await this.usersRepository.find();
+    return this.usersRepository.find();
   }
 
   async findById(id: string): Promise<User> {
