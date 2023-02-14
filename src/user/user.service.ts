@@ -68,12 +68,9 @@ export class UserService {
   }
 
   async deleteById(id: string) {
-    const userToDelete = await this.findById(id);
-    if (!userToDelete) {
-      throw new UserServiceException(UserServiceExceptionType.NOT_FOUND);
-    }
+    await this.findById(id);
 
-    const isDeleted = await this.usersRepository.delete(userToDelete.id);
+    const isDeleted = await this.usersRepository.delete(id);
     if (!isDeleted) {
       throw new UserServiceException(UserServiceExceptionType.INTERNAL_ERROR);
     }
