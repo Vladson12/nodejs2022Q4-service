@@ -53,7 +53,7 @@ export class UserTableCreation1676238451353 implements MigrationInterface {
           },
         ],
       }),
-      false,
+      true,
     );
   }
 

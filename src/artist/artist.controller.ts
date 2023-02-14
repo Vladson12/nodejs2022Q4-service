@@ -22,17 +22,17 @@ export class ArtistController {
 
   @Post()
   async create(@Body() dto: ArtistDto) {
-    // return this.artistService.create(dto);
+    return this.artistService.create(dto);
   }
 
   @Get()
   async getAll() {
-    // return this.artistService.findAll();
+    return this.artistService.findAll();
   }
 
   @Get(':id')
   async getById(@Param('id', ParseUUIDPipe) id: string) {
-    // return this.artistService.findById(id);
+    return this.artistService.findById(id);
   }
 
   @Put(':id')
@@ -40,12 +40,12 @@ export class ArtistController {
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: ArtistDto,
   ) {
-    // return this.artistService.updateById(id, dto);
+    return this.artistService.updateById(id, dto);
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
   async deleteById(@Param('id', ParseUUIDPipe) id: string) {
-    // return this.artistService.deleteById(id);
+    return this.artistService.deleteById(id);
   }
 }
