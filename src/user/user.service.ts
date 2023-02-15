@@ -17,11 +17,12 @@ export class UserService {
   ) {}
 
   async create(dto: CreateUserDto): Promise<User> {
+    const currentTimestamp = Date.now();
     const userToCreate = new User({
       ...dto,
       version: 1,
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
+      createdAt: currentTimestamp,
+      updatedAt: currentTimestamp,
     });
 
     const createdUser = this.usersRepository.create(userToCreate);
@@ -54,17 +55,20 @@ export class UserService {
     }
 
     userToUpdate.password = dto.newPassword;
+    userToUpdate.updatedAt = Date.now();
 
-    const isUpdated = await this.usersRepository.update(
-      userToUpdate.id,
-      userToUpdate,
-    );
+    // const isUpdated = await this.usersRepository.update(
+    //   userToUpdate.id,
+    //   userToUpdate,
+    // );
+
+    const isUpdated = await this.usersRepository.save(userToUpdate);
 
     if (!isUpdated) {
       throw new UserServiceException(UserServiceExceptionType.INTERNAL_ERROR);
     }
 
-    return this.findById(userToUpdate.id);
+    return this.findById(id);
   }
 
   async deleteById(id: string) {
