@@ -1,4 +1,5 @@
 import { Album } from 'src/album/album.model';
+import { Track } from 'src/track/track.model';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
@@ -14,6 +15,9 @@ export class Artist {
 
   @OneToMany(() => Album, (album) => album.artist)
   albums: Album[];
+
+  @OneToMany(() => Track, (track) => track.artist)
+  tracks: Album[];
 
   constructor(partial: Partial<Artist>) {
     Object.assign(this, partial);

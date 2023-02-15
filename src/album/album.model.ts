@@ -1,5 +1,12 @@
 import { Artist } from 'src/artist/artist.model';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Track } from 'src/track/track.model';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class Album {
@@ -17,6 +24,9 @@ export class Album {
 
   @Column('uuid')
   artistId: string | null;
+
+  @OneToMany(() => Track, (track) => track.album)
+  tracks: Track[];
 
   constructor(partial: Partial<Album>) {
     Object.assign(this, partial);
