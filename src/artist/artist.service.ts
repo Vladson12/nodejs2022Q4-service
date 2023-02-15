@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { InMemoryDbService } from 'src/db/in-memory-db.service';
 import { ArtistDto } from './dto/artist.dto';
 import { Artist } from './artist.model';
 import {
@@ -7,7 +6,6 @@ import {
   ArtistServiceExceptionType,
 } from './exceptions/artist-service-exception';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/user/user.model';
 import { Repository } from 'typeorm';
 
 @Injectable()
