@@ -17,7 +17,7 @@ export class User {
   version: number;
 
   @Column('bigint')
-  createdAt: number;
+  readonly createdAt?: number;
 
   @Column('bigint')
   updatedAt: number;
