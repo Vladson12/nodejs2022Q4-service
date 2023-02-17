@@ -57,25 +57,19 @@ export class UserService {
     userToUpdate.password = dto.newPassword;
     userToUpdate.updatedAt = Date.now();
 
-    // const isUpdated = await this.usersRepository.update(
-    //   userToUpdate.id,
-    //   userToUpdate,
-    // );
-
-    const isUpdated = await this.usersRepository.save(userToUpdate);
-
-    if (!isUpdated) {
+    try {
+      return await this.usersRepository.save(userToUpdate);
+    } catch (err) {
       throw new UserServiceException(UserServiceExceptionType.INTERNAL_ERROR);
     }
-
-    return this.findById(id);
   }
 
   async deleteById(id: string) {
     await this.findById(id);
 
-    const isDeleted = await this.usersRepository.delete(id);
-    if (!isDeleted) {
+    try {
+      await this.usersRepository.delete(id);
+    } catch (err) {
       throw new UserServiceException(UserServiceExceptionType.INTERNAL_ERROR);
     }
   }

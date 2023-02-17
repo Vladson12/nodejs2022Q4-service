@@ -3,6 +3,7 @@ version: '3'
 services:
   node:
     image: node-api
+    container_name: node-api
     build: .
     restart: always
     ports:
@@ -15,6 +16,7 @@ services:
       - ./:/usr/app
   db:
     image: db-node-api
+    container_name: db-node-api
     build: ./db
     restart: always
     ports:

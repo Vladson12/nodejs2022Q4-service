@@ -19,6 +19,8 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "docker:build": "docker-compose up --build",
+    "docker:test": "docker exec db-node-api npm run test ",
     "docker:scan": "docker scan node-api & docker scan db-node-api"
   },
   "dependencies": {

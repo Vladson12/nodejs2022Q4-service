@@ -35,21 +35,20 @@ export class AlbumService {
   async updateById(id: string, dto: AlbumDto): Promise<Album> {
     const albumToUpdate = await this.findById(id);
     Object.assign(albumToUpdate, dto);
-    const isUpdated = await this.albumsRepository.update(
-      albumToUpdate.id,
-      albumToUpdate,
-    );
-    if (!isUpdated) {
+
+    try {
+      return this.albumsRepository.save(albumToUpdate);
+    } catch (err) {
       throw new AlbumServiceException(AlbumServiceExceptionType.INTERNAL_ERROR);
     }
-    return this.findById(albumToUpdate.id);
   }
 
   async deleteById(id: string) {
     await this.findById(id);
 
-    const isDeleted = await this.albumsRepository.delete(id);
-    if (!isDeleted) {
+    try {
+      await this.albumsRepository.delete(id);
+    } catch (err) {
       throw new AlbumServiceException(AlbumServiceExceptionType.INTERNAL_ERROR);
     }
   }

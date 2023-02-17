@@ -35,20 +35,20 @@ export class TrackService {
   async updateById(id: string, dto: TrackDto): Promise<Track> {
     const trackToUpdate = await this.findById(id);
     Object.assign(trackToUpdate, dto);
-    const isUpdated = await this.trackRepository.update(
-      trackToUpdate.id,
-      trackToUpdate,
-    );
-    if (!isUpdated) {
+
+    try {
+      return this.trackRepository.save(trackToUpdate);
+    } catch (err) {
       throw new TrackServiceException(TrackServiceExceptionType.INTERNAL_ERROR);
     }
-    return this.findById(trackToUpdate.id);
   }
+
   async deleteById(id: string) {
     await this.findById(id);
 
-    const isDeleted = await this.trackRepository.delete(id);
-    if (!isDeleted) {
+    try {
+      await this.trackRepository.delete(id);
+    } catch (err) {
       throw new TrackServiceException(TrackServiceExceptionType.INTERNAL_ERROR);
     }
   }
