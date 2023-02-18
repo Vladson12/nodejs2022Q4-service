@@ -55,6 +55,7 @@ export class UserService {
     }
 
     userToUpdate.password = dto.newPassword;
+    userToUpdate.version++;
     userToUpdate.updatedAt = Date.now();
 
     try {

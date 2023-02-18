@@ -10,16 +10,16 @@ export class Track {
   @Column()
   name: string;
 
-  @ManyToOne(() => Artist, (artist) => artist.albums)
+  @ManyToOne(() => Artist, (artist) => artist.albums, { onDelete: 'SET NULL' })
   artist: Artist; // refers to Artist
 
-  @Column('uuid')
+  @Column('uuid', { nullable: true })
   artistId: string | null;
 
-  @ManyToOne(() => Album, (album) => album.tracks)
+  @ManyToOne(() => Album, (album) => album.tracks, { onDelete: 'SET NULL' })
   album: Album; // refers to Artist
 
-  @Column('uuid')
+  @Column('uuid', { nullable: true })
   albumId: string | null;
 
   @Column()

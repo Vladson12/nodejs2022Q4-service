@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { InMemoryDbService } from 'src/db/in-memory-db.service';
 import { ResponseFavoritesDto } from './dto/response-favorites.dto';
 import {
   FavoritesServiceException,

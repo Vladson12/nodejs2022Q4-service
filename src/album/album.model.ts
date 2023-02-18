@@ -19,10 +19,10 @@ export class Album {
   @Column()
   year: number;
 
-  @ManyToOne(() => Artist, (artist) => artist.albums)
+  @ManyToOne(() => Artist, (artist) => artist.albums, { onDelete: 'SET NULL' })
   artist: Artist; // refers to Artist
 
-  @Column('uuid')
+  @Column('uuid', { nullable: true })
   artistId: string | null;
 
   @OneToMany(() => Track, (track) => track.album)
