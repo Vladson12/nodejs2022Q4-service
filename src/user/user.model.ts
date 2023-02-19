@@ -13,7 +13,7 @@ export class User {
   @Exclude()
   password: string;
 
-  @Column('integer')
+  @Column('integer', { default: 1 })
   version: number;
 
   @Column('bigint')

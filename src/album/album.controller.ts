@@ -1,5 +1,6 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
@@ -15,7 +16,7 @@ import { ErrorsInterceptor } from 'src/errors/errors.interceptor';
 import { AlbumService } from './album.service';
 import { AlbumDto } from './dto/album.dto';
 
-@UseInterceptors(ErrorsInterceptor)
+@UseInterceptors(ErrorsInterceptor, ClassSerializerInterceptor)
 @Controller('album')
 export class AlbumController {
   constructor(private readonly albumService: AlbumService) {}

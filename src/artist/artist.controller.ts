@@ -1,5 +1,6 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
@@ -15,7 +16,7 @@ import { ErrorsInterceptor } from 'src/errors/errors.interceptor';
 import { ArtistDto } from './dto/artist.dto';
 import { ArtistService } from './artist.service';
 
-@UseInterceptors(ErrorsInterceptor)
+@UseInterceptors(ErrorsInterceptor, ClassSerializerInterceptor)
 @Controller('artist')
 export class ArtistController {
   constructor(private readonly artistService: ArtistService) {}

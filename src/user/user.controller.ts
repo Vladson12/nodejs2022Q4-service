@@ -17,30 +17,26 @@ import { UpdatePasswordDto } from './dto/update-password.dto';
 import { ParseUUIDPipe } from '@nestjs/common/pipes';
 import { ErrorsInterceptor } from 'src/errors/errors.interceptor';
 
-@UseInterceptors(ErrorsInterceptor)
+@UseInterceptors(ErrorsInterceptor, ClassSerializerInterceptor)
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @UseInterceptors(ClassSerializerInterceptor)
   @Post()
   async create(@Body() dto: CreateUserDto) {
     return this.userService.create(dto);
   }
 
-  @UseInterceptors(ClassSerializerInterceptor)
   @Get()
   async getAll() {
     return this.userService.findAll();
   }
 
-  @UseInterceptors(ClassSerializerInterceptor)
   @Get(':id')
   async getById(@Param('id', ParseUUIDPipe) id: string) {
     return this.userService.findById(id);
   }
 
-  @UseInterceptors(ClassSerializerInterceptor)
   @Put(':id')
   async updatePasswordById(
     @Param('id', ParseUUIDPipe) id: string,

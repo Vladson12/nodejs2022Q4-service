@@ -1,5 +1,6 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
@@ -15,7 +16,7 @@ import { TrackService } from './track.service';
 import { TrackDto } from './dto/track.dto';
 import { ErrorsInterceptor } from 'src/errors/errors.interceptor';
 
-@UseInterceptors(ErrorsInterceptor)
+@UseInterceptors(ErrorsInterceptor, ClassSerializerInterceptor)
 @Controller('track')
 export class TrackController {
   constructor(private readonly trackService: TrackService) {}
