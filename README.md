@@ -40,10 +40,8 @@ To setup the project, please follow these steps:
 
 ## Running
 
-Use docker:
-
 ```
-docker-compose up
+npm run docker:build
 ```
 
 ## Scanning
@@ -56,3 +54,4 @@ npm run docker:scan
 
 After starting the app on port (4000 as default) you can use project's OpenAPI documentation in your browser here: http://localhost:4000/api/.
 For more information about OpenAPI/Swagger please visit https://swagger.io/.
+You can also connect to database using settings and credentials in .env file.
