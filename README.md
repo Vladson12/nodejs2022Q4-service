@@ -56,12 +56,6 @@ npm run docker:build
 docker exec node-api npm run test
 ```
 
-or (if you have `npm` installed on your machine and prefer it):
-
-```
-npm run test
-```
-
 ## Scanning
 
 ```
