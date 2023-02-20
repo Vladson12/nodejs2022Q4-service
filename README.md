@@ -50,7 +50,7 @@ or (if you have `npm` installed on your machine and prefer it):
 npm run docker:build
 ```
 
-##
+## Testing
 
 ```
 docker exec node-api npm run test
