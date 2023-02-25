@@ -23,7 +23,7 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "docker:build": "docker-compose up --build",
     "docker:scan": "docker scan node-api & docker scan db-node-api",
-    "migration:generate": "npm run typeorm -- migration:generate",
+    "migration:generate": "npm run typeorm-ts -- migration:generate",
     "migration:run": "npm run typeorm-ts -- migration:run",
     "migration:revert": "npm run typeorm -- migration:revert",
     "typeorm": "npx typeorm -d dist/db/data-source.js",
