@@ -10,10 +10,12 @@ import { dataSourceOptions } from './db/data-source';
 import { LoggerMiddleware } from './logger/logger.middleware';
 import { APP_FILTER } from '@nestjs/core';
 import { AllExceptionsFilter } from './errors/http-exception.filter';
+import { LoggerModule } from './logger/logger.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot(dataSourceOptions),
+    LoggerModule,
     UserModule,
     TrackModule,
     ArtistModule,

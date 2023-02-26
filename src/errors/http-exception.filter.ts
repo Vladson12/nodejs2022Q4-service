@@ -5,21 +5,15 @@ import {
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { HttpAdapterHost } from '@nestjs/core';
 import { Request } from 'express';
-import { logLevels } from 'src/logger/logger.levels';
 import { MyLogger } from 'src/logger/logger.service';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
-  private logger = new MyLogger(
-    logLevels.slice(0, +process.env.APP_LOG_LEVEL || 5),
-  );
-
   constructor(
     private readonly httpAdapterHost: HttpAdapterHost,
-    private readonly configService: ConfigService,
+    private readonly logger: MyLogger,
   ) {}
 
   catch(exception: unknown, host: ArgumentsHost): void {

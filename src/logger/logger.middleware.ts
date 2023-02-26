@@ -1,19 +1,16 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 import { MyLogger } from './logger.service';
-import { logLevels } from './logger.levels';
 
 @Injectable()
 export class LoggerMiddleware implements NestMiddleware {
-  private logger = new MyLogger(
-    logLevels.slice(0, +process.env.APP_LOG_LEVEL || 5),
-  );
+  constructor(private readonly logger: MyLogger) {}
 
   use(req: Request, res: Response, next: NextFunction) {
     const { method, url, query, body } = req;
     res.on('finish', () => {
       const message = `method: ${method}, status code: ${
-        res.statusCode
+        res.statusCode === 304 ? 200 : res.statusCode
       }, url: ${url}, query params: ${JSON.stringify(
         query,
       )}, body: ${JSON.stringify(body)}`;

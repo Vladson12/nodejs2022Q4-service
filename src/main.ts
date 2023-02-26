@@ -8,7 +8,7 @@ import { resolve } from 'path';
 import { load } from 'js-yaml';
 import { readFileSync } from 'fs';
 import 'reflect-metadata';
-import { types } from 'pg';
+import { MyLogger } from './logger/logger.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -20,6 +20,7 @@ async function bootstrap() {
     }),
   );
   app.enableCors();
+  app.useLogger(new MyLogger('Application'));
   const configService: ConfigService = app.get(ConfigService);
 
   const inputFilePath = resolve(__dirname, '..', 'doc', 'api.yaml');
@@ -27,10 +28,5 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, objDoc as OpenAPIObject);
 
   await app.listen(+configService.get('PORT') || 4000);
-
-  types.setTypeParser(
-    types.builtins.INT8,
-    (value: string | number | bigint | boolean) => Number(value),
-  );
 }
 bootstrap();
