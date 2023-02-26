@@ -1,10 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { ArtistDto } from './dto/artist.dto';
 import { Artist } from './artist.model';
-import {
-  ArtistServiceException,
-  ArtistServiceExceptionType,
-} from './exceptions/artist-service-exception';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -27,7 +23,7 @@ export class ArtistService {
   async findById(id: string): Promise<Artist> {
     const foundArtist = await this.artistsRepository.findOneBy({ id });
     if (!foundArtist) {
-      throw new ArtistServiceException(ArtistServiceExceptionType.NOT_FOUND);
+      throw new NotFoundException('Artist with such id not found');
     }
     return foundArtist;
   }
@@ -36,24 +32,12 @@ export class ArtistService {
     const artistToUpdate = await this.findById(id);
     Object.assign(artistToUpdate, dto);
 
-    try {
-      return this.artistsRepository.save(artistToUpdate);
-    } catch (err) {
-      throw new ArtistServiceException(
-        ArtistServiceExceptionType.INTERNAL_ERROR,
-      );
-    }
+    return this.artistsRepository.save(artistToUpdate);
   }
 
   async deleteById(id: string) {
     await this.findById(id);
 
-    try {
-      this.artistsRepository.delete(id);
-    } catch (err) {
-      throw new ArtistServiceException(
-        ArtistServiceExceptionType.INTERNAL_ERROR,
-      );
-    }
+    this.artistsRepository.delete(id);
   }
 }

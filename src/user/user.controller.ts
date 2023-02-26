@@ -15,9 +15,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UserService } from './user.service';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { ParseUUIDPipe } from '@nestjs/common/pipes';
-import { ErrorsInterceptor } from 'src/errors/errors.interceptor';
 
-@UseInterceptors(ErrorsInterceptor, ClassSerializerInterceptor)
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}

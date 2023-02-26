@@ -1,9 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { TrackDto } from './dto/track.dto';
-import {
-  TrackServiceException,
-  TrackServiceExceptionType,
-} from './exceptions/track-service-exception';
 import { Track } from './track.model';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -27,7 +23,7 @@ export class TrackService {
   async findById(id: string): Promise<Track> {
     const foundTrack = await this.trackRepository.findOneBy({ id });
     if (!foundTrack) {
-      throw new TrackServiceException(TrackServiceExceptionType.NOT_FOUND);
+      throw new NotFoundException('Track with such id not found');
     }
     return foundTrack;
   }
@@ -36,20 +32,12 @@ export class TrackService {
     const trackToUpdate = await this.findById(id);
     Object.assign(trackToUpdate, dto);
 
-    try {
-      return this.trackRepository.save(trackToUpdate);
-    } catch (err) {
-      throw new TrackServiceException(TrackServiceExceptionType.INTERNAL_ERROR);
-    }
+    return this.trackRepository.save(trackToUpdate);
   }
 
   async deleteById(id: string) {
     await this.findById(id);
 
-    try {
-      await this.trackRepository.delete(id);
-    } catch (err) {
-      throw new TrackServiceException(TrackServiceExceptionType.INTERNAL_ERROR);
-    }
+    await this.trackRepository.delete(id);
   }
 }

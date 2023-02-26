@@ -1,10 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { AlbumDto } from './dto/album.dto';
 import { Album } from './album.model';
-import {
-  AlbumServiceException,
-  AlbumServiceExceptionType,
-} from './exceptions/album-service-exception';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -27,7 +23,7 @@ export class AlbumService {
   async findById(id: string): Promise<Album> {
     const foundAlbum = await this.albumsRepository.findOneBy({ id });
     if (!foundAlbum) {
-      throw new AlbumServiceException(AlbumServiceExceptionType.NOT_FOUND);
+      throw new NotFoundException('Album with such id not found');
     }
     return foundAlbum;
   }
@@ -36,20 +32,12 @@ export class AlbumService {
     const albumToUpdate = await this.findById(id);
     Object.assign(albumToUpdate, dto);
 
-    try {
-      return this.albumsRepository.save(albumToUpdate);
-    } catch (err) {
-      throw new AlbumServiceException(AlbumServiceExceptionType.INTERNAL_ERROR);
-    }
+    return this.albumsRepository.save(albumToUpdate);
   }
 
   async deleteById(id: string) {
     await this.findById(id);
 
-    try {
-      await this.albumsRepository.delete(id);
-    } catch (err) {
-      throw new AlbumServiceException(AlbumServiceExceptionType.INTERNAL_ERROR);
-    }
+    await this.albumsRepository.delete(id);
   }
 }

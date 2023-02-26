@@ -14,9 +14,8 @@ import {
 } from '@nestjs/common';
 import { TrackService } from './track.service';
 import { TrackDto } from './dto/track.dto';
-import { ErrorsInterceptor } from 'src/errors/errors.interceptor';
 
-@UseInterceptors(ErrorsInterceptor, ClassSerializerInterceptor)
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('track')
 export class TrackController {
   constructor(private readonly trackService: TrackService) {}

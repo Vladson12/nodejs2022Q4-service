@@ -12,11 +12,10 @@ import {
   Put,
   UseInterceptors,
 } from '@nestjs/common';
-import { ErrorsInterceptor } from 'src/errors/errors.interceptor';
 import { ArtistDto } from './dto/artist.dto';
 import { ArtistService } from './artist.service';
 
-@UseInterceptors(ErrorsInterceptor, ClassSerializerInterceptor)
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('artist')
 export class ArtistController {
   constructor(private readonly artistService: ArtistService) {}
