@@ -27,9 +27,15 @@ export class AllExceptionsFilter implements ExceptionFilter {
         ? exception.getStatus()
         : HttpStatus.INTERNAL_SERVER_ERROR;
 
+    const errorMessage =
+      exception instanceof HttpException
+        ? exception.message
+        : 'Something went wrong on server';
+
     const path = httpAdapter.getRequestUrl(request);
     const responseBody = {
       statusCode: httpStatus,
+      message: errorMessage,
       timestamp: new Date(),
       path,
     };
