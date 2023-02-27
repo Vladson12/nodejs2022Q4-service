@@ -7,11 +7,11 @@ export class LoggerMiddleware implements NestMiddleware {
   constructor(private readonly logger: MyLogger) {}
 
   use(req: Request, res: Response, next: NextFunction) {
-    const { method, url, query, body } = req;
+    const { method, originalUrl, query, body } = req;
     res.on('finish', () => {
       const message = `method: ${method}, status code: ${
         res.statusCode === 304 ? 200 : res.statusCode
-      }, url: ${url}, query params: ${JSON.stringify(
+      }, url: ${originalUrl}, query params: ${JSON.stringify(
         query,
       )}, body: ${JSON.stringify(body)}`;
 
