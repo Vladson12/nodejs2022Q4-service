@@ -10,10 +10,9 @@ import {
   Post,
   UseInterceptors,
 } from '@nestjs/common';
-import { ErrorsInterceptor } from 'src/errors/errors.interceptor';
 import { FavoritesService } from './favorites.service';
 
-@UseInterceptors(ErrorsInterceptor, ClassSerializerInterceptor)
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('favs')
 export class FavoritesController {
   constructor(private readonly favoritesService: FavoritesService) {}

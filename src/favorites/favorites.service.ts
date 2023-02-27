@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
 import {
-  FavoritesServiceException,
-  FavoritesServiceExceptionType,
-} from './exceptions/favorites-service-exception';
+  Injectable,
+  NotFoundException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Artist } from 'src/artist/artist.model';
 import { Repository } from 'typeorm';
@@ -41,9 +41,7 @@ export class FavoritesService {
   async addArtist(id: string) {
     const artistToAddToFavs = await this.artistsRepository.findOneBy({ id });
     if (!artistToAddToFavs) {
-      throw new FavoritesServiceException(
-        FavoritesServiceExceptionType.ARTIST_NOT_FOUND,
-      );
+      throw new UnprocessableEntityException('Artist with such id not found');
     }
 
     if (!artistToAddToFavs.favoritesId) {
@@ -58,9 +56,7 @@ export class FavoritesService {
   async addAlbum(id: string) {
     const albumToAddToFavs = await this.albumsRepository.findOneBy({ id });
     if (!albumToAddToFavs) {
-      throw new FavoritesServiceException(
-        FavoritesServiceExceptionType.ALBUM_NOT_FOUND,
-      );
+      throw new UnprocessableEntityException('Album with such id not found');
     }
 
     if (!albumToAddToFavs.favoritesId) {
@@ -74,9 +70,7 @@ export class FavoritesService {
   async addTrack(id: string) {
     const trackToAddToFavs = await this.tracksRepository.findOneBy({ id });
     if (!trackToAddToFavs) {
-      throw new FavoritesServiceException(
-        FavoritesServiceExceptionType.TRACK_NOT_FOUND,
-      );
+      throw new UnprocessableEntityException('Track with such id not found');
     }
 
     if (!trackToAddToFavs.favoritesId) {
@@ -92,15 +86,11 @@ export class FavoritesService {
       id,
     });
     if (!artistToDeleteFromFavs) {
-      throw new FavoritesServiceException(
-        FavoritesServiceExceptionType.ARTIST_NOT_FOUND,
-      );
+      throw new UnprocessableEntityException('Artist with such id not found');
     }
 
     if (!artistToDeleteFromFavs.favoritesId) {
-      throw new FavoritesServiceException(
-        FavoritesServiceExceptionType.ARTIST_NOT_FAVORITE,
-      );
+      throw new NotFoundException('Artist with such id not in favorites');
     }
 
     artistToDeleteFromFavs.favoritesId = null;
@@ -115,15 +105,11 @@ export class FavoritesService {
       id,
     });
     if (!albumToDeleteFromFavs) {
-      throw new FavoritesServiceException(
-        FavoritesServiceExceptionType.ALBUM_NOT_FOUND,
-      );
+      throw new UnprocessableEntityException('Album with such id not found');
     }
 
     if (!albumToDeleteFromFavs.favoritesId) {
-      throw new FavoritesServiceException(
-        FavoritesServiceExceptionType.ALBUM_NOT_FAVORITE,
-      );
+      throw new NotFoundException('Album with such id not in favorites');
     }
 
     albumToDeleteFromFavs.favoritesId = null;
@@ -138,15 +124,11 @@ export class FavoritesService {
       id,
     });
     if (!trackToDeleteFromFavs) {
-      throw new FavoritesServiceException(
-        FavoritesServiceExceptionType.TRACK_NOT_FOUND,
-      );
+      throw new UnprocessableEntityException('Track with such id not found');
     }
 
     if (!trackToDeleteFromFavs.favoritesId) {
-      throw new FavoritesServiceException(
-        FavoritesServiceExceptionType.TRACK_NOT_FAVORITE,
-      );
+      throw new NotFoundException('Album with such id not in favorites');
     }
 
     trackToDeleteFromFavs.favoritesId = null;

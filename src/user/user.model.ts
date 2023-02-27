@@ -6,10 +6,10 @@ export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column('varchar', { length: 50 })
+  @Column('varchar', { length: 50, unique: true })
   login: string;
 
-  @Column('varchar', { length: 50 })
+  @Column('varchar', { length: 256 })
   @Exclude()
   password: string;
 
@@ -21,6 +21,10 @@ export class User {
 
   @Column('bigint')
   updatedAt: number;
+
+  @Column('varchar', { nullable: true })
+  @Exclude()
+  refreshToken: string;
 
   constructor(partial: Partial<User>) {
     Object.assign(this, partial);

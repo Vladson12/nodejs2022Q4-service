@@ -12,11 +12,10 @@ import {
   Put,
   UseInterceptors,
 } from '@nestjs/common';
-import { ErrorsInterceptor } from 'src/errors/errors.interceptor';
 import { AlbumService } from './album.service';
 import { AlbumDto } from './dto/album.dto';
 
-@UseInterceptors(ErrorsInterceptor, ClassSerializerInterceptor)
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('album')
 export class AlbumController {
   constructor(private readonly albumService: AlbumService) {}

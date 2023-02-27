@@ -1,25 +1,34 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
-import {
-  UserServiceException,
-  UserServiceExceptionType,
-} from './exceptions/user-service-exception';
 import { User } from './user.model';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { compare, hash } from 'bcrypt';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+    private configService: ConfigService,
   ) {}
 
   async create(dto: CreateUserDto): Promise<User> {
     const currentTimestamp = Date.now();
+
+    const hashedPassword = await hash(
+      dto.password,
+      +this.configService.get('CRYPT_SALT'),
+    );
     const userToCreate = new User({
       ...dto,
+      password: hashedPassword,
       version: 1,
       createdAt: currentTimestamp,
       updatedAt: currentTimestamp,
@@ -36,7 +45,7 @@ export class UserService {
   async findById(id: string): Promise<User> {
     const foundUser = await this.usersRepository.findOneBy({ id });
     if (!foundUser) {
-      throw new UserServiceException(UserServiceExceptionType.NOT_FOUND);
+      throw new NotFoundException('User with such id not found');
     }
     return foundUser;
   }
@@ -45,33 +54,26 @@ export class UserService {
     const userToUpdate = await this.usersRepository.findOneBy({ id });
 
     if (!userToUpdate) {
-      throw new UserServiceException(UserServiceExceptionType.NOT_FOUND);
+      throw new NotFoundException('User with such id not found');
     }
 
-    if (!(userToUpdate.password === dto.oldPassword)) {
-      throw new UserServiceException(
-        UserServiceExceptionType.CREDENTIALS_WRONG,
-      );
+    if (!(await compare(dto.oldPassword, userToUpdate.password))) {
+      throw new ForbiddenException('Password wrong');
     }
 
-    userToUpdate.password = dto.newPassword;
+    userToUpdate.password = await hash(
+      dto.newPassword,
+      +this.configService.get('CRYPT_SALT'),
+    );
     userToUpdate.version++;
     userToUpdate.updatedAt = Date.now();
 
-    try {
-      return await this.usersRepository.save(userToUpdate);
-    } catch (err) {
-      throw new UserServiceException(UserServiceExceptionType.INTERNAL_ERROR);
-    }
+    return await this.usersRepository.save(userToUpdate);
   }
 
   async deleteById(id: string) {
     await this.findById(id);
 
-    try {
-      await this.usersRepository.delete(id);
-    } catch (err) {
-      throw new UserServiceException(UserServiceExceptionType.INTERNAL_ERROR);
-    }
+    await this.usersRepository.delete(id);
   }
 }
