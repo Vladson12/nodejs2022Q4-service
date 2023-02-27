@@ -48,7 +48,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       request.url
     }, query params: ${JSON.stringify(request.query)}, body: ${JSON.stringify(
       request.body,
-    )}`;
+    )} error: ${JSON.stringify(errorMessage)}`;
     this.logger.error(errMessage, 'HTTP');
     this.logger.logToFile('error', errMessage);
   }

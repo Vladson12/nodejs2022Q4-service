@@ -23,7 +23,10 @@ export class AuthService {
   ) {}
 
   async register(user: CreateUserDto) {
-    const hashedPassword = await hash(user.password, +process.env.CRYPT_SALT);
+    const hashedPassword = await hash(
+      user.password,
+      +this.configService.get('CRYPT_SALT'),
+    );
 
     const currentTimestamp = Date.now();
     const userToCreate = new User({
