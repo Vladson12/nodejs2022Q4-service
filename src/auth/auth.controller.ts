@@ -27,4 +27,10 @@ export class AuthController {
   login(@Body() user: CreateUserDto): Promise<Tokens> {
     return this.authService.login(user);
   }
+
+  @HttpCode(200)
+  @Post('refresh')
+  refresh(@Body('refreshToken') token: string) {
+    return this.authService.refresh(token);
+  }
 }

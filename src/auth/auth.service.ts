@@ -1,4 +1,9 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { hash, compare } from 'bcrypt';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
@@ -46,12 +51,44 @@ export class AuthService {
       throw new ForbiddenException('Wrong password');
     }
 
-    const { accessToken, refreshToken } = await this.getTokens({
+    const tokens = await this.getTokens({
       userId: foundUser.id,
       login: foundUser.login,
     });
 
-    return { accessToken, refreshToken };
+    this.usersRepository.update(foundUser.id, {
+      refreshToken: tokens.refreshToken,
+    });
+
+    return tokens;
+  }
+
+  async refresh(token: string) {
+    await this.verify(token);
+
+    const decodedToken = this.jwtService.decode(token);
+    const foundUser = await this.usersRepository.findOne({
+      where: { id: decodedToken.sub },
+    });
+
+    if (!foundUser) {
+      throw new NotFoundException('User not found');
+    }
+
+    if (foundUser.refreshToken !== token) {
+      throw new ForbiddenException('Token is invalid or expired');
+    }
+
+    const tokens = await this.getTokens({
+      userId: foundUser.id,
+      login: foundUser.login,
+    });
+
+    this.usersRepository.update(foundUser.id, {
+      refreshToken: tokens.refreshToken,
+    });
+
+    return tokens;
   }
 
   private async getTokens(payload: TokenPayload): Promise<Tokens> {
@@ -60,12 +97,25 @@ export class AuthService {
         secret: this.configService.get('JWT_SECRET_KEY'),
         expiresIn: this.configService.get('TOKEN_EXPIRE_TIME'),
       }),
-      this.jwtService.signAsync(payload, {
-        secret: this.configService.get('JWT_SECRET_REFRESH_KEY'),
-        expiresIn: this.configService.get('TOKEN_REFRESH_EXPIRE_TIME'),
-      }),
+      this.jwtService.signAsync(
+        { sub: payload.userId },
+        {
+          secret: this.configService.get('JWT_SECRET_REFRESH_KEY'),
+          expiresIn: this.configService.get('TOKEN_REFRESH_EXPIRE_TIME'),
+        },
+      ),
     ]);
 
     return { accessToken, refreshToken };
+  }
+
+  private async verify(token: string) {
+    try {
+      return this.jwtService.verifyAsync(token, {
+        secret: this.configService.get('JWT_SECRET_REFRESH_KEY'),
+      });
+    } catch (error) {
+      throw new UnauthorizedException('Token invalid');
+    }
   }
 }
