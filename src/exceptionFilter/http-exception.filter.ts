@@ -29,13 +29,13 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
     const errorMessage =
       exception instanceof HttpException
-        ? exception.message
+        ? exception.getResponse()
         : 'Something went wrong on server';
 
     const path = httpAdapter.getRequestUrl(request);
     const responseBody = {
       statusCode: httpStatus,
-      message: errorMessage,
+      error: errorMessage,
       timestamp: new Date(),
       path,
     };
