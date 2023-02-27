@@ -9,7 +9,7 @@ export class User {
   @Column('varchar', { length: 50 })
   login: string;
 
-  @Column('varchar', { length: 50 })
+  @Column('varchar', { length: 256 })
   @Exclude()
   password: string;
 

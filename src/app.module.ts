@@ -9,8 +9,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { dataSourceOptions } from './db/data-source';
 import { LoggerMiddleware } from './logger/logger.middleware';
 import { APP_FILTER } from '@nestjs/core';
-import { AllExceptionsFilter } from './errors/http-exception.filter';
+import { AllExceptionsFilter } from './exceptionFilter/http-exception.filter';
 import { LoggerModule } from './logger/logger.module';
+import { AuthModule } from './auth/auth.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -21,6 +22,7 @@ import { LoggerModule } from './logger/logger.module';
     ArtistModule,
     AlbumModule,
     FavoritesModule,
+    AuthModule,
   ],
   providers: [
     {
