@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { ConsoleLogger, Injectable } from '@nestjs/common';
 import { appendFile, mkdir, readdir, statSync, writeFile } from 'fs';
 import { resolve } from 'path';
